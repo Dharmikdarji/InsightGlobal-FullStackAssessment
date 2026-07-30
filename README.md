@@ -15,6 +15,7 @@ A full-stack CRUD application built with **Angular** and **ASP.NET Core Web API*
 - C#
 - Dependency Injection
 - RESTful APIs
+- xUnit (Unit Testing)
 
 ## Features
 
@@ -33,7 +34,9 @@ FullStackAssessment/
 │   └── product-management/
 │
 └── backend/
-    └── ProductManagement.Api/
+    ├── ProductManagement.Api/
+    ├── ProductManagement.Api.Tests/
+    └── ProductManagement.sln
 ```
 
 ## Getting Started
@@ -65,6 +68,16 @@ The Angular application will be available at:
 ```text
 http://localhost:4200
 ```
+
+## Running Tests
+
+From the `backend` directory:
+
+```bash
+dotnet test
+```
+
+This executes the xUnit unit tests for the Product Management API.
 
 ## API Endpoints
 
