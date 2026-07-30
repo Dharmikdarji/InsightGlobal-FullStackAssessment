@@ -13,7 +13,7 @@
 </section>
 
 <section class="product-card">
-  <div class="table-wrapper" *ngIf="products.length > 0; else emptyState">
+  <div class="table-wrapper" *ngIf="products().length > 0; else emptyState">
     <table>
       <thead>
         <tr>
@@ -25,7 +25,7 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let product of products">
+        <tr *ngFor="let product of products()">
           <td>
             <a
               class="product-name"

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { Product } from '../../models/product';
@@ -8,34 +7,17 @@ import { ProductService } from '../../services/product';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css'
 })
-export class ProductList {
-  products: Product[] = [];
-  newProductName = '';
+export class ProductList implements OnInit {
+  readonly products = signal<Product[]>([]);
 
-  constructor(private productService: ProductService) {
-    this.products = this.productService.getProducts();
-  }
+  constructor(private readonly productService: ProductService) {}
 
-  addProduct(): void {
-    if (!this.newProductName.trim()) {
-      return;
-    }
-
-    const product: Product = {
-      id: Date.now(),
-      name: this.newProductName.trim(),
-      description: '',
-      price: 0,
-      quantity: 0
-    };
-
-    this.productService.addProduct(product);
-    this.products = this.productService.getProducts();
-    this.newProductName = '';
+  ngOnInit(): void {
+    this.loadProducts();
   }
 
   deleteProduct(id: number): void {
@@ -47,7 +29,26 @@ export class ProductList {
       return;
     }
 
-    this.productService.deleteProduct(id);
-    this.products = this.productService.getProducts();
+    this.productService.deleteProduct(id).subscribe({
+      next: () => {
+        this.products.update(products =>
+          products.filter(product => product.id !== id)
+        );
+      },
+      error: error => {
+        console.error('Failed to delete product.', error);
+      }
+    });
+  }
+
+  private loadProducts(): void {
+    this.productService.getProducts().subscribe({
+      next: products => {
+        this.products.set(products);
+      },
+      error: error => {
+        console.error('Failed to load products.', error);
+      }
+    });
   }
 }

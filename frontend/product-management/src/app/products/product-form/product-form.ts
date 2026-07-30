@@ -1,5 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -13,39 +17,46 @@ import { ProductService } from '../../services/product';
   styleUrl: './product-form.css'
 })
 export class ProductForm implements OnInit {
-  product: Product = {
-    id: 0,
-    name: '',
-    description: '',
-    price: 0,
-    quantity: 0
-  };
+  product: Product = this.createEmptyProduct();
 
   isEditMode = false;
+  isSaving = false;
+  isLoading = false;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private productService: ProductService
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly productService: ProductService,
+    private readonly changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     const productId = Number(this.route.snapshot.paramMap.get('id'));
 
-    if (!Number.isNaN(productId) && productId > 0) {
-      const existingProduct = this.productService.getProductById(productId);
-
-      if (existingProduct) {
-        this.product = { ...existingProduct };
-        this.isEditMode = true;
-      }
+    if (!Number.isInteger(productId) || productId <= 0) {
+      return;
     }
+
+    this.isEditMode = true;
+    this.isLoading = true;
+
+    this.productService.getProductById(productId).subscribe({
+      next: product => {
+        this.product = product;
+        this.isLoading = false;
+        this.changeDetectorRef.detectChanges();
+      },
+      error: error => {
+        console.error('Failed to load product.', error);
+        this.router.navigate(['/products']);
+      }
+    });
   }
 
   saveProduct(): void {
     const trimmedName = this.product.name.trim();
 
-    if (!trimmedName) {
+    if (!trimmedName || this.isSaving || this.isLoading) {
       return;
     }
 
@@ -54,15 +65,49 @@ export class ProductForm implements OnInit {
       name: trimmedName
     };
 
+    this.isSaving = true;
+
     if (this.isEditMode) {
-      this.productService.updateProduct(productToSave);
-    } else {
-      this.productService.addProduct({
-        ...productToSave,
-        id: Date.now()
-      });
+      this.updateProduct(productToSave);
+      return;
     }
 
-    this.router.navigate(['/products']);
+    this.createProduct(productToSave);
+  }
+
+  private createProduct(product: Product): void {
+    this.productService.createProduct(product).subscribe({
+      next: () => {
+        this.router.navigate(['/products']);
+      },
+      error: error => {
+        this.isSaving = false;
+        this.changeDetectorRef.detectChanges();
+        console.error('Failed to create product.', error);
+      }
+    });
+  }
+
+  private updateProduct(product: Product): void {
+    this.productService.updateProduct(product.id, product).subscribe({
+      next: () => {
+        this.router.navigate(['/products']);
+      },
+      error: error => {
+        this.isSaving = false;
+        this.changeDetectorRef.detectChanges();
+        console.error('Failed to update product.', error);
+      }
+    });
+  }
+
+  private createEmptyProduct(): Product {
+    return {
+      id: 0,
+      name: '',
+      description: '',
+      price: 0,
+      quantity: 0
+    };
   }
 }
