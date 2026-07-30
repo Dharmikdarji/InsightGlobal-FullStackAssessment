@@ -1,0 +1,30 @@
+<h2>Products</h2>
+
+<div>
+  <label for="productName">Product name</label>
+
+  <input
+    id="productName"
+    type="text"
+    [(ngModel)]="newProductName"
+    placeholder="Enter product name"
+  />
+
+  <button type="button" (click)="addProduct()">
+    Add Product
+  </button>
+</div>
+
+<hr />
+
+<ul>
+  <li *ngFor="let product of products">
+    <strong>{{ product.name }}</strong>
+    -
+    {{ product.price | currency }}
+
+    <button type="button" (click)="deleteProduct(product.id)">
+      Delete
+    </button>
+  </li>
+</ul>
