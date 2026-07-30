@@ -1,30 +1,32 @@
 # Product Management System
 
-A full-stack CRUD application built with Angular and ASP.NET Core Web API.
+A full-stack CRUD application built with **Angular** and **ASP.NET Core Web API** for managing products with complete CRUD functionality.
 
 ## Tech Stack
 
-Frontend
+### Frontend
 - Angular
 - TypeScript
-- HTML/CSS
+- HTML
+- CSS
 
-Backend
+### Backend
 - ASP.NET Core Web API
 - C#
 - Dependency Injection
-- REST API
+- RESTful APIs
 
 ## Features
 
 - View all products
 - View product details
-- Add a product
-- Edit a product
+- Add a new product
+- Edit an existing product
 - Delete a product
 
 ## Project Structure
 
+```text
 FullStackAssessment/
 │
 ├── frontend/
@@ -32,8 +34,11 @@ FullStackAssessment/
 │
 └── backend/
     └── ProductManagement.Api/
+```
 
-## Running the Backend
+## Getting Started
+
+### Run the Backend
 
 ```bash
 cd backend/ProductManagement.Api
@@ -41,13 +46,13 @@ dotnet restore
 dotnet run
 ```
 
-The API runs on:
+The API will be available at:
 
-```
+```text
 http://localhost:5207
 ```
 
-## Running the Frontend
+### Run the Frontend
 
 ```bash
 cd frontend/product-management
@@ -55,20 +60,22 @@ npm install
 ng serve
 ```
 
-The Angular application runs on:
+The Angular application will be available at:
 
-```
+```text
 http://localhost:4200
 ```
 
 ## API Endpoints
 
-GET /api/products
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/products` | Retrieve all products |
+| GET | `/api/products/{id}` | Retrieve a product by ID |
+| POST | `/api/products` | Create a new product |
+| PUT | `/api/products/{id}` | Update an existing product |
+| DELETE | `/api/products/{id}` | Delete a product |
 
-GET /api/products/{id}
+## Author
 
-POST /api/products
-
-PUT /api/products/{id}
-
-DELETE /api/products/{id}
+**Dharmik Darji**
