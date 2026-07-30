@@ -26,8 +26,18 @@ export class ProductService {
     return [...this.products];
   }
 
+  getProductById(id: number): Product | undefined {
+    return this.products.find(product => product.id === id);
+  }
+
   addProduct(product: Product): void {
     this.products.push(product);
+  }
+
+  updateProduct(updatedProduct: Product): void {
+    this.products = this.products.map(product =>
+      product.id === updatedProduct.id ? updatedProduct : product
+    );
   }
 
   deleteProduct(id: number): void {

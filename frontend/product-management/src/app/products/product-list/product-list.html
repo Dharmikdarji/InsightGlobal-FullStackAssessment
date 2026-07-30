@@ -1,30 +1,84 @@
-<h2>Products</h2>
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Inventory</p>
+    <h1>Products</h1>
+    <p class="page-description">
+      Manage product information, pricing, and available quantities.
+    </p>
+  </div>
 
-<div>
-  <label for="productName">Product name</label>
-
-  <input
-    id="productName"
-    type="text"
-    [(ngModel)]="newProductName"
-    placeholder="Enter product name"
-  />
-
-  <button type="button" (click)="addProduct()">
+  <a class="primary-button" routerLink="/products/new">
     Add Product
-  </button>
-</div>
+  </a>
+</section>
 
-<hr />
+<section class="product-card">
+  <div class="table-wrapper" *ngIf="products.length > 0; else emptyState">
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th class="actions-column">Actions</th>
+        </tr>
+      </thead>
 
-<ul>
-  <li *ngFor="let product of products">
-    <strong>{{ product.name }}</strong>
-    -
-    {{ product.price | currency }}
+      <tbody>
+        <tr *ngFor="let product of products">
+          <td>
+            <a
+              class="product-name"
+              [routerLink]="['/products', product.id]"
+            >
+              {{ product.name }}
+            </a>
 
-    <button type="button" (click)="deleteProduct(product.id)">
-      Delete
-    </button>
-  </li>
-</ul>
+            <p class="product-description">
+              {{ product.description }}
+            </p>
+          </td>
+
+          <td>{{ product.price | currency }}</td>
+
+          <td>
+            <span
+              class="quantity-badge"
+              [class.low-stock]="product.quantity < 5"
+            >
+              {{ product.quantity }}
+            </span>
+          </td>
+
+          <td class="actions">
+            <a
+              class="secondary-button"
+              [routerLink]="['/products', product.id, 'edit']"
+            >
+              Edit
+            </a>
+
+            <button
+              class="danger-button"
+              type="button"
+              (click)="deleteProduct(product.id)"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <h2>No products yet</h2>
+      <p>Add your first product to start managing the inventory.</p>
+
+      <a class="primary-button" routerLink="/products/new">
+        Add Product
+      </a>
+    </div>
+  </ng-template>
+</section>

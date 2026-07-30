@@ -1,0 +1,103 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Inventory</p>
+    <h1>{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h1>
+    <p class="page-description">
+      {{
+        isEditMode
+          ? 'Update the product information below.'
+          : 'Enter the product information to add it to the inventory.'
+      }}
+    </p>
+  </div>
+</section>
+
+<section class="form-card">
+  <form #productForm="ngForm" (ngSubmit)="saveProduct()">
+    <div class="form-group">
+      <label for="name">Product name</label>
+
+      <input
+        id="name"
+        name="name"
+        type="text"
+        [(ngModel)]="product.name"
+        #name="ngModel"
+        required
+        maxlength="100"
+        placeholder="Enter product name"
+      />
+
+      <p class="field-error" *ngIf="name.invalid && name.touched">
+        Product name is required.
+      </p>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+
+      <textarea
+        id="description"
+        name="description"
+        rows="5"
+        [(ngModel)]="product.description"
+        maxlength="500"
+        placeholder="Enter a short product description"
+      ></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="price">Price</label>
+
+        <input
+          id="price"
+          name="price"
+          type="number"
+          [(ngModel)]="product.price"
+          #price="ngModel"
+          required
+          min="0"
+          step="0.01"
+        />
+
+        <p class="field-error" *ngIf="price.invalid && price.touched">
+          Enter a valid price.
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+
+        <input
+          id="quantity"
+          name="quantity"
+          type="number"
+          [(ngModel)]="product.quantity"
+          #quantity="ngModel"
+          required
+          min="0"
+          step="1"
+        />
+
+        <p class="field-error" *ngIf="quantity.invalid && quantity.touched">
+          Enter a valid quantity.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a class="secondary-button" routerLink="/products">
+        Cancel
+      </a>
+
+      <button
+        class="primary-button"
+        type="submit"
+        [disabled]="productForm.invalid"
+      >
+        {{ isEditMode ? 'Save Changes' : 'Add Product' }}
+      </button>
+    </div>
+  </form>
+</section>

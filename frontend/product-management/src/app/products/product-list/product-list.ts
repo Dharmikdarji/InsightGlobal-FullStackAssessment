@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css'
 })
@@ -34,11 +35,18 @@ export class ProductList {
 
     this.productService.addProduct(product);
     this.products = this.productService.getProducts();
-
     this.newProductName = '';
   }
 
   deleteProduct(id: number): void {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this product?'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
     this.productService.deleteProduct(id);
     this.products = this.productService.getProducts();
   }

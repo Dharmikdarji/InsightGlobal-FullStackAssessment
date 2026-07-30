@@ -1,0 +1,55 @@
+<section *ngIf="product; else notFound">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Product Details</p>
+      <h1>{{ product.name }}</h1>
+      <p class="page-description">
+        View the complete product information.
+      </p>
+    </div>
+
+    <a
+      class="secondary-button"
+      [routerLink]="['/products', product.id, 'edit']"
+    >
+      Edit Product
+    </a>
+  </div>
+
+  <div class="details-card">
+    <div class="detail-item">
+      <span>Description</span>
+      <p>{{ product.description || 'No description provided.' }}</p>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-item">
+        <span>Price</span>
+        <p>{{ product.price | currency }}</p>
+      </div>
+
+      <div class="detail-item">
+        <span>Quantity</span>
+        <p>{{ product.quantity }}</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a class="secondary-button" routerLink="/products">
+        Back
+      </a>
+    </div>
+  </div>
+</section>
+
+<ng-template #notFound>
+  <div class="empty-state">
+    <h2>Product not found</h2>
+
+    <p>The requested product could not be found.</p>
+
+    <a class="primary-button" routerLink="/products">
+      Back to Products
+    </a>
+  </div>
+</ng-template>
